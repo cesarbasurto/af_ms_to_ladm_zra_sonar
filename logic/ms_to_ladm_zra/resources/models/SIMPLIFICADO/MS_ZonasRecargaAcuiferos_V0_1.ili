@@ -1,0 +1,130 @@
+INTERLIS 2.3;
+
+/** Modelo simplificado de Zonas de Recarga de Acuíferos.
+ * 
+ * El modelo simplificado de Zonas de Recarga de Acuíferos permite gestionar la información resultante de la aplicación de la Guía Metodológica para la Identificación de Zonas Potenciales de Recarga de Acuíferos (Resolución 017 de 2026 del MADS), estandarizando los objetos territoriales, dominios, atributos y relaciones asociados a la probabilidad de recarga, con el objetivo de facilitar el intercambio de datos entre las autoridades ambientales competentes, los entes territoriales y las entidades del orden nacional que intervienen en la gestión integral del recurso hídrico subterráneo y en el ordenamiento territorial alrededor del agua.
+ */
+!!@ technicalContact="Dirección de Gestión Integral del Recurso Hídrico"
+MODEL MS_ZonasRecargaAcuiferos_V0_1 (es)
+AT "mailto:recursohidrico@minambiente.gov.co"
+VERSION "0.0.1"  =
+  IMPORTS ISO19107_PLANAS_V3_1;
+
+  TOPIC MS_ZRA =
+    OID AS INTERLIS.UUIDOID;
+
+    DOMAIN
+
+      /** Define la categoría de recarga asignada a la zona de recarga de acuíferos, conforme a la escala de calificación de la metodología oficial vigente.
+       */
+      !!@ ili2db.dispName="(MS ZRA) Tipo de categoría de recarga"
+      MS_ZRA_CategoriaRecargaTipo = (
+        /** Categoría de recarga correspondiente a la calificación 5, que indica el mayor potencial de recarga de la zona de recarga de acuíferos, conforme a la escala de calificación de la metodología oficial vigente.
+         */
+        !!@ ili2db.dispName="Muy alta (5)"
+        Muy_Alta,
+        /** Categoría de recarga correspondiente a la calificación 4, que indica un potencial de recarga alto de la zona de recarga de acuíferos, conforme a la escala de calificación de la metodología oficial vigente.
+         */
+        !!@ ili2db.dispName="Alta (4)"
+        Alta,
+        /** Categoría de recarga correspondiente a la calificación 3, que indica un potencial de recarga intermedio de la zona de recarga de acuíferos, conforme a la escala de calificación de la metodología oficial vigente.
+         */
+        !!@ ili2db.dispName="Moderada (3)"
+        Moderada,
+        /** Categoría de recarga correspondiente a la calificación 2, que indica un potencial de recarga bajo de la zona de recarga de acuíferos, conforme a la escala de calificación de la metodología oficial vigente.
+         */
+        !!@ ili2db.dispName="Baja (2)"
+        Baja,
+        /** Categoría de recarga correspondiente a la calificación 1, que indica el menor potencial de recarga de la zona de recarga de acuíferos, conforme a la escala de calificación de la metodología oficial vigente.
+         */
+        !!@ ili2db.dispName="Muy baja (1)"
+        Muy_Baja,
+        /** Categoría de recarga distinta a las anteriores, que debe precisarse en el atributo de detalle de categoría de recarga.
+         */
+        !!@ ili2db.dispName=Otro
+        Otro
+      );
+
+      /** Define la fuente administrativa relacionada con la zona de recarga de acuífero.
+       */
+      !!@ ili2db.dispName="(MS ZRA) Tipo de fuente administrativa"
+      MS_ZRA_FuenteAdministrativaTipo = (
+        !!@ ili2db.dispName="Documento público"
+        Documento_Publico(
+          /** Acto legislativo o normativo de carácter local que es expedido por diferentes autoridades dentro de la estructura administrativa del país, tales como los concejales, alcaldes, personerías, contralorías y Juntas Administradoras Locales (JAL).
+           */
+          !!@ ili2db.dispName="(Documento público) Acuerdo"
+          Acuerdo,
+          /** Decisión administrativa emitida por una autoridad administrativa en ejercicio de sus funciones, que tiene efectos jurídicos dentro de su ámbito de competencia. Las resoluciones se utilizan para regular, interpretar, aplicar o ejecutar disposiciones legales o reglamentarias y son de carácter obligatorio para las personas o entidades a las que se dirigen.
+           */
+          !!@ ili2db.dispName="(Documento público) Resolución"
+          Resolucion
+        )
+      );
+
+    /** Autoridad Ambiental que gestiona la información de la zona de recarga de acuíferos.
+     */
+    !!@ ili2db.dispName="(MS ZRA) Autoridad ambiental"
+    CLASS MS_ZRA_AutoridadAmbiental =
+      /** Número de documento de la autoridad ambiental.
+       */
+      !!@ ili2db.dispName="Número de documento"
+      Numero_Documento : MANDATORY TEXT*20;
+      /** Nombre de la autoridad ambiental.
+       */
+      Nombre : TEXT*255;
+      /** Sigla de la autoridad ambiental.
+       */
+      Sigla : TEXT*20;
+    END MS_ZRA_AutoridadAmbiental;
+
+    /** Área de especial importancia ecológica que goza de protección especial; las autoridades ambientales deberán adelantar las acciones tendientes a su conservación y manejo, (Decreto Ley 1076 de 2015 - art.2.2.2.1.3.8, Título 2, Capítulo 1, Sección 3).
+     */
+    !!@ ili2db.dispName="(MS ZRA) Zona de recarga de acuífero"
+    CLASS MS_ZRA_ZonaRecargaAcuifero =
+      /** Contiene el nombre oficial asignado a la zona de recarga de acuíferos.
+       */
+      !!@ ili2db.dispName="Nombre de la zona de recarga"
+      Nombre : TEXT*255;
+      /** Define la categoría de recarga asignada a la zona, conforme a la escala de calificación de la metodología oficial (muy baja a muy alta).
+       */
+      !!@ ili2db.dispName="Categoría de recarga"
+      Categoria_Recarga : MANDATORY MS_ZRA_CategoriaRecargaTipo;
+      /** Describe o precisa la categoría de recarga asignada, en especial cuando se selecciona el valor Otro.
+       */
+      !!@ ili2db.dispName="Detalle categoría de recarga"
+      Detalle_Categoria_Recarga : TEXT*255;
+      /** Define el tipo de acto administrativo relacionado con la zona de recarga de acuíferos.
+       */
+      !!@ ili2db.dispName="Tipo de fuente administrativa"
+      Tipo_Fuente_Administrativa : MANDATORY MS_ZRA_FuenteAdministrativaTipo;
+      /** Nombre con el que se identifica la fuente administrativa relacionada con la zona de recarga de acuíferos.
+       */
+      !!@ ili2db.dispName="Nombre fuente administrativa"
+      Nombre_Fuente_Administrativa : TEXT*255;
+      /** Fecha de expedición de la fuente administrativa relacionada con la zona de recarga de acuíferos.
+       */
+      !!@ ili2db.dispName="Fecha fuente administrativa"
+      Fecha_Fuente_Administrativa : INTERLIS.XMLDate;
+      /** Dirección URL que permite consultar o acceder a la fuente administrativa relacionada con la zona de recarga de acuíferos.
+       */
+      !!@ ili2db.dispName="URL fuente administrativa"
+      URL_Fuente_Administrativa : TEXT*4096;
+      /** Escala cartográfica en la que se produjo la información geográfica de la zona de recarga de acuíferos.
+       */
+      !!@ ili2db.dispName="Escala de producción"
+      Escala_Produccion : 1 .. 1000000;
+      Observaciones : MTEXT*500;
+      /** Área de la zona de recarga de acuíferos, expresada en hectáreas (ha).
+       */
+      !!@ ili2db.dispName="Área (Ha) Zona de recarga de acuíferos"
+      Area_Ha : 0.000 .. 300000000.000;
+      /** Almacena la representación espacial de la zona de recarga de acuíferos, mediante una geometría de tipo polígono.
+       */
+      !!@ ili2db.dispName=Geometría
+      Geometria : MANDATORY ISO19107_PLANAS_V3_1.GM_MultiSurface2D;
+    END MS_ZRA_ZonaRecargaAcuifero;
+
+  END MS_ZRA;
+
+END MS_ZonasRecargaAcuiferos_V0_1.

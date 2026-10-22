@@ -1,0 +1,202 @@
+INTERLIS 2.3;
+
+/** Modelo extendido de Zonas de Recarga de Acuíferos.
+ * 
+ * El modelo extendido de Zonas de Recarga de Acuíferos permite gestionar la información resultante de la aplicación de la Guía Metodológica para la Identificación de Zonas Potenciales de Recarga de Acuíferos (Resolución 017 de 2026 del MADS), estandarizando los objetos territoriales, dominios, atributos y relaciones asociados a la probabilidad de recarga, con el objetivo de facilitar el intercambio de datos entre las autoridades ambientales competentes, los entes territoriales y las entidades del orden nacional que intervienen en la gestión integral del recurso hídrico subterráneo y en el ordenamiento territorial alrededor del agua.
+ */
+!!@ technicalContact="Dirección de Bosques, Biodiversidad y Servicios Ecosistémicos"
+MODEL LADM_COL_v_1_0_0_Ext_ZRA (es)
+AT "mailto:Obosques@minambiente.gov.co"
+VERSION "1.0.0"  =
+  IMPORTS LADM_COL_v_4_0_1_Nucleo;
+
+  DOMAIN
+
+    /** Define la categoría de recarga asignada a la zona de recarga de acuífero, conforme a la escala de calificación de la metodología oficial vigente.
+     */
+    !!@ ili2db.dispName="(ZRA) Tipo de categoría de recarga"
+    ZRA_CategoriaRecargaTipo = (
+      /** Categoría de recarga correspondiente a la calificación 5, que indica el mayor potencial de recarga de la zona de recarga de acuíferos, conforme a la escala de calificación de la metodología oficial vigente.
+       */
+      !!@ ili2db.dispName="Muy alta (5)"
+      Muy_Alta,
+      /** Categoría de recarga correspondiente a la calificación 4, que indica un potencial de recarga alto de la zona de recarga de acuíferos, conforme a la escala de calificación de la metodología oficial vigente.
+       */
+      !!@ ili2db.dispName="Alta (4)"
+      Alta,
+      /** Categoría de recarga correspondiente a la calificación 3, que indica un potencial de recarga intermedio de la zona de recarga de acuíferos, conforme a la escala de calificación de la metodología oficial vigente.
+       */
+      !!@ ili2db.dispName="Moderada (3)"
+      Moderada,
+      /** Categoría de recarga correspondiente a la calificación 2, que indica un potencial de recarga bajo de la zona de recarga de acuíferos, conforme a la escala de calificación de la metodología oficial vigente.
+       */
+      !!@ ili2db.dispName="Baja (2)"
+      Baja,
+      /** Categoría de recarga correspondiente a la calificación 1, que indica el menor potencial de recarga de la zona de recarga de acuíferos, conforme a la escala de calificación de la metodología oficial vigente.
+       */
+      !!@ ili2db.dispName="Muy baja (1)"
+      Muy_Baja,
+      /** Categoría de recarga distinta a las anteriores, que debe precisarse en el atributo de detalle de categoría de recarga.
+       */
+      !!@ ili2db.dispName=Otro
+      Otro
+    );
+
+    /** Tipo de derecho asociado con la zona de recarga de acuíferos.
+     */
+    !!@ ili2db.dispName="(ZRA) Tipo de derecho"
+    ZRA_DerechoTipo = (
+      /** Derecho a usar las aguas de uso público, superficiales o subterráneas, para un fin determinado. Su alcance, caudal, uso y vigencia los fija la norma o el acto administrativo que lo otorga, sin que el titular adquiera la propiedad del agua. Se adquiere por ministerio de la ley, permiso, concesión o asociación (Decreto-Ley 2811 de 1974, art. 51).
+       */
+      !!@ ili2db.dispName=Aprovechar
+      Aprovechar
+    );
+
+    /** Define el tipo de acto administrativo relacionado con la zona de recarga de acuífero.
+     */
+    !!@ ili2db.dispName="(ZRA) Tipo de fuente administrativa"
+    ZRA_FuenteAdministrativaTipo
+    EXTENDS LADM_COL_v_4_0_1_Nucleo.LADM_Nucleo.COL_FuenteAdministrativaTipo = (
+      !!@ ili2db.dispName="Documento público"
+      Documento_Publico(
+        /** Acto administrativo de carácter general mediante el cual un órgano colegiado adopta sus decisiones. En el sector ambiental corresponde a los actos del Consejo Directivo de las autoridades ambientales; en el nivel territorial, a los de los concejos municipales y distritales y las juntas administradoras locales.
+         */
+        !!@ ili2db.dispName="(Documento público) Acuerdo"
+        Acuerdo,
+        /** Decisión administrativa emitida por una autoridad administrativa en ejercicio de sus funciones, que tiene efectos jurídicos dentro de su ámbito de competencia. Las resoluciones se utilizan para regular, interpretar, aplicar o ejecutar disposiciones legales o reglamentarias y son de carácter obligatorio para las personas o entidades a las que se dirigen.
+         */
+        !!@ ili2db.dispName="(Documento público) Resolución"
+        Resolucion
+      )
+    );
+
+    /** Tipo de responsabilidad asociado con la zona de recarga de acuífero.
+     */
+    !!@ ili2db.dispName="(ZRA) Tipo de responsabilidad"
+    ZRA_ResponsabilidadTipo = (
+      /** Obligación de la autoridad ambiental competente de identificar, delimitar y registrar la zona de recarga del acuífero en su jurisdicción, con base en estudios hidrogeológicos.
+       */
+      !!@ ili2db.dispName=Identificar
+      Identificar
+    );
+
+  TOPIC ZRA
+  EXTENDS LADM_COL_v_4_0_1_Nucleo.LADM_Nucleo =
+    BASKET OID AS INTERLIS.UUIDOID;
+    OID AS INTERLIS.UUIDOID;
+    DEPENDS ON LADM_COL_v_4_0_1_Nucleo.LADM_Nucleo;
+
+    /** Agrupa los interesados relacionados con las zonas de recarga de acuíferos, de acuerdo con su participación, competencia o relación con la gestión y administración.
+     */
+    !!@ ili2db.dispName="(ZRA) Agrupación de interesados"
+    CLASS ZRA_AgrupacionInteresados
+    EXTENDS LADM_COL_v_4_0_1_Nucleo.LADM_Nucleo.COL_AgrupacionInteresados =
+    END ZRA_AgrupacionInteresados;
+
+    /** Establece el tipo de derecho asociado con la zona de recarga de acuífero.
+     */
+    !!@ ili2db.dispName="(ZRA) Derecho"
+    CLASS ZRA_Derecho
+    EXTENDS LADM_COL_v_4_0_1_Nucleo.LADM_Nucleo.COL_DRR =
+      /** Establece el tipo de derecho asociado con la zona de recarga de acuífero.
+       */
+      !!@ ili2db.dispName="Tipo de derecho"
+      Tipo : MANDATORY LADM_COL_v_1_0_0_Ext_ZRA.ZRA_DerechoTipo;
+    END ZRA_Derecho;
+
+    /** Identifica el tipo de acto administrativo relacionado con la zona de recarga de acuífero., mediante el cual la autoridad ambiental competente identifica, delimita o adopta la zona de recarga de acuífero como determinante ambiental. Puede tratarse del acto de aprobación del Plan de Ordenación y Manejo de Cuenca Hidrográfica (POMCA), del acto de adopción del Plan de Ordenamiento del Recurso Hídrico (PORH), del acto de adopción del Plan de Manejo Ambiental de Acuíferos (PMAA), o del acto específico de adopción de determinantes ambientales.
+     */
+    !!@ ili2db.dispName="(ZRA) Fuente administrativa"
+    CLASS ZRA_FuenteAdministrativa
+    EXTENDS LADM_COL_v_4_0_1_Nucleo.LADM_Nucleo.COL_FuenteAdministrativa =
+      /** Define el tipo acto admisitrativo relacionado con la zona de recarga de acuífero.
+       */
+      !!@ ili2db.dispName="Tipo de Fuente Administrativa"
+      Tipo (EXTENDED) : MANDATORY LADM_COL_v_1_0_0_Ext_ZRA.ZRA_FuenteAdministrativaTipo;
+    END ZRA_FuenteAdministrativa;
+
+    /** Fuente espacial asociada a la zona de recarga de acuífero.
+     */
+    !!@ ili2db.dispName="(ZRA) Fuente espacial"
+    CLASS ZRA_FuenteEspacial
+    EXTENDS LADM_COL_v_4_0_1_Nucleo.LADM_Nucleo.COL_FuenteEspacial =
+      /** Escala cartográfica en la que se produjo la información geográfica de la zona de recarga de acuífero.
+       */
+      !!@ ili2db.dispName="Escala de producción"
+      Escala_Produccion : 1 .. 1000000;
+    END ZRA_FuenteEspacial;
+
+    /** Interesado asociado con los DRR de la zona de recarga de acuífero.
+     */
+    !!@ ili2db.dispName="(ZRA) Interesado"
+    CLASS ZRA_Interesado
+    EXTENDS LADM_COL_v_4_0_1_Nucleo.LADM_Nucleo.COL_Interesado =
+      /** Sigla de la autoridad ambiental.
+       */
+      Sigla : TEXT*20;
+      !!@ ili2db.dispName="Observación Interesado"
+      Observacion : TEXT*255;
+    END ZRA_Interesado;
+
+    !!@ ili2db.dispName="(ZRA) NU Agrupación unidades espaciales"
+    CLASS ZRA_NU_AgrupacionUnidadesEspaciales
+    EXTENDS LADM_COL_v_4_0_1_Nucleo.LADM_Nucleo.COL_AgrupacionUnidadesEspaciales =
+    END ZRA_NU_AgrupacionUnidadesEspaciales;
+
+    !!@ ili2db.dispName="(ZRA) NU Cadenas caras límite"
+    CLASS ZRA_NU_CadenaCarasLimite
+    EXTENDS LADM_COL_v_4_0_1_Nucleo.LADM_Nucleo.COL_CadenaCarasLimite =
+    END ZRA_NU_CadenaCarasLimite;
+
+    !!@ ili2db.dispName="(ZRA) NU Punto"
+    CLASS ZRA_NU_Punto
+    EXTENDS LADM_COL_v_4_0_1_Nucleo.LADM_Nucleo.COL_Punto =
+    END ZRA_NU_Punto;
+
+    /** Establece el tipo de responsabilidad asociado con la zona de recarga de acuífero.
+     */
+    !!@ ili2db.dispName="(ZRA) Responsabilidad"
+    CLASS ZRA_Responsabilidad
+    EXTENDS LADM_COL_v_4_0_1_Nucleo.LADM_Nucleo.COL_DRR =
+      /** Establece el tipo de responsabilidad asociado con la zona de recarga de acuífero.
+       */
+      !!@ ili2db.dispName="Tipo de responsabilidad"
+      Tipo : MANDATORY LADM_COL_v_1_0_0_Ext_ZRA.ZRA_ResponsabilidadTipo;
+    END ZRA_Responsabilidad;
+
+    /** Contiene la información alfanumérica que caracteriza y describe la Unidad Administrativa Básica (UAB) asociada a la zona de recarga de acuífero.
+     */
+    !!@ ili2db.dispName="(ZRA) UAB Zona de recarga de acuífero"
+    CLASS ZRA_UAB_ZonaRecargaAcuifero
+    EXTENDS LADM_COL_v_4_0_1_Nucleo.LADM_Nucleo.COL_UnidadAdministrativaBasica =
+      /** Contiene el nombre oficial asignado a la zona de recarga de acuíferos.
+       */
+      !!@ ili2db.dispName="Nombre de la zona de recarga de acuífero"
+      Nombre_Zona_Recarga_Acuifero : TEXT*255;
+      /** Define la categoría de recarga asignada a la zona, conforme a la escala de calificación de la metodología oficial (muy baja a muy alta).
+       */
+      !!@ ili2db.dispName="Categoría de recarga"
+      Categoria_Recarga : MANDATORY LADM_COL_v_1_0_0_Ext_ZRA.ZRA_CategoriaRecargaTipo;
+      /** Describe o precisa la categoría de recarga asignada, en especial cuando se selecciona el valor Otro.
+       */
+      !!@ ili2db.dispName="Detalle categoría de recarga"
+      Detalle_Categoria_Recarga : TEXT*255;
+      /** Contiene observaciones o información relevante relacionada con la migración y caracterización de la zona de recarga de acuífero.
+       */
+      Observaciones : MTEXT*500;
+    END ZRA_UAB_ZonaRecargaAcuifero;
+
+    /** Unidad Espacial de la zona de recarga de acuífero.
+     */
+    !!@ ili2db.dispName="(ZRA) UE Zona de recarga de acuífero"
+    CLASS ZRA_UE_ZonaRecargaAcuifero
+    EXTENDS LADM_COL_v_4_0_1_Nucleo.LADM_Nucleo.COL_UnidadEspacial =
+      /** Área de la zona de recarga de acuífero, expresada en hectáreas (Ha).
+       */
+      !!@ ili2db.dispName="Área (Ha) ZRA"
+      Area_Ha : MANDATORY 0.000 .. 300000000.000;
+    END ZRA_UE_ZonaRecargaAcuifero;
+
+  END ZRA;
+
+END LADM_COL_v_1_0_0_Ext_ZRA.
